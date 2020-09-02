@@ -6,7 +6,8 @@ resource "aws_placement_group" "cloudera" {
 resource "aws_security_group" "cloudera" {
     name = "${var.tag_name}"
     description = "Cloudera (${var.tag_name}) outside and maintenance traffic"
-
+    vpc_id      = var.vpc_id
+    
     tags = {
         Name = "${var.tag_name}"
     }
