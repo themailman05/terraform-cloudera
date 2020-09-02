@@ -6,6 +6,7 @@ resource "aws_instance" "ambari_server" {
     count = "${var.ambari_server}"
     security_groups = ["${aws_security_group.cloudera.name}"]
     placement_group = "${aws_placement_group.cloudera.id}"
+    subnet_id = var.subnet_id
 
     root_block_device {
         volume_type = "${var.volume_type}"
@@ -55,6 +56,7 @@ resource "aws_instance" "ambari_node" {
     count = "${var.ambari_nodes}"
     security_groups = ["${aws_security_group.cloudera.name}"]
     placement_group = "${aws_placement_group.cloudera.id}"
+    subnet_id = var.subnet_id
 
     root_block_device {
         volume_type = "${var.volume_type}"

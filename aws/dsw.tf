@@ -5,6 +5,7 @@ resource "aws_instance" "dsw_master" {
   count           = "${var.dsw_master}"
   security_groups = ["${aws_security_group.cloudera.name}"]
   placement_group = "${aws_placement_group.cloudera.id}"
+  subnet_id       = var.subnet_id
 
   root_block_device {
     volume_type           = "io1"
