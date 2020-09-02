@@ -3,7 +3,7 @@ resource "aws_instance" "dsw_master" {
   instance_type   = "${var.instance_type}"
   key_name        = "${var.key_name}"
   count           = "${var.dsw_master}"
-  security_groups = ["${aws_security_group.cloudera.name}"]
+  security_groups = ["${aws_security_group.cloudera.id}"]
   placement_group = "${aws_placement_group.cloudera.id}"
   subnet_id       = var.subnet_id
 
@@ -95,7 +95,7 @@ resource "aws_instance" "dsw_node" {
   instance_type   = "${var.instance_type}"
   key_name        = "${var.key_name}"
   count           = "${var.dsw_nodes}"
-  security_groups = ["${aws_security_group.cloudera.name}"]
+  security_groups = ["${aws_security_group.cloudera.id}"]
   placement_group = "${aws_placement_group.cloudera.id}"
 
   root_block_device {

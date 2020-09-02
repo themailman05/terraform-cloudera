@@ -3,7 +3,7 @@ resource "aws_instance" "client" {
   instance_type   = "${var.instance_type}"
   key_name        = "${var.key_name}"
   count           = "${var.client}"
-  security_groups = ["${aws_security_group.cloudera.name}"]
+  security_groups = ["${aws_security_group.cloudera.id}"]
   placement_group = "${aws_placement_group.cloudera.id}"
   subnet_id       = var.subnet_id
 

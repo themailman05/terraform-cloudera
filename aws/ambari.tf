@@ -4,7 +4,7 @@ resource "aws_instance" "ambari_server" {
     instance_type = "${var.instance_type}"
     key_name = "${var.key_name}"
     count = "${var.ambari_server}"
-    security_groups = ["${aws_security_group.cloudera.name}"]
+    security_groups = ["${aws_security_group.cloudera.id}"]
     placement_group = "${aws_placement_group.cloudera.id}"
     subnet_id = var.subnet_id
 
@@ -54,7 +54,7 @@ resource "aws_instance" "ambari_node" {
     instance_type = "${var.instance_type}"
     key_name = "${var.key_name}"
     count = "${var.ambari_nodes}"
-    security_groups = ["${aws_security_group.cloudera.name}"]
+    security_groups = ["${aws_security_group.cloudera.id}"]
     placement_group = "${aws_placement_group.cloudera.id}"
     subnet_id = var.subnet_id
 
