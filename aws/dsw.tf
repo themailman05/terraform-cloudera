@@ -97,7 +97,8 @@ resource "aws_instance" "dsw_node" {
   count           = "${var.dsw_nodes}"
   security_groups = ["${aws_security_group.cloudera.id}"]
   placement_group = "${aws_placement_group.cloudera.id}"
-
+  subnet_id       = var.subnet_id 
+  
   root_block_device {
     volume_type           = "io1"
     volume_size           = "100"
