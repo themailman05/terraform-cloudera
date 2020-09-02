@@ -7,7 +7,7 @@ resource "aws_security_group" "cloudera" {
     name = "${var.tag_name}"
     description = "Cloudera (${var.tag_name}) outside and maintenance traffic"
 
-    tags {
+    tags = {
         Name = "${var.tag_name}"
     }
 

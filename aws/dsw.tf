@@ -14,7 +14,7 @@ resource "aws_instance" "dsw_master" {
   }
 
   # Docker volume
-  ebs_block_device = {
+  ebs_block_device {
     volume_type           = "io1"
     volume_size           = "500"
     device_name           = "/dev/xvdb"
@@ -23,7 +23,7 @@ resource "aws_instance" "dsw_master" {
   }
 
   # App volume (Master only)
-  ebs_block_device = {
+  ebs_block_device {
     volume_size           = "500"
     volume_type           = "io1"
     device_name           = "/dev/xvdc"

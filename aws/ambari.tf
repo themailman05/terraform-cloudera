@@ -14,15 +14,17 @@ resource "aws_instance" "ambari_server" {
         delete_on_termination = true
     }
 
-    tags {
+    tags = {
         Name = "${var.tag_name}-ambari-server"
     }
 
-    volume_tags {
+    volume_tags = {
         Name = "${var.tag_name}-ambari-server"
     }
 
     connection {
+        host = self.public_ip
+        type = "ssh"
         user = "${lookup(var.user, var.platform)}"
         private_key = "${file("${var.key_path}")}"
     }
@@ -61,15 +63,16 @@ resource "aws_instance" "ambari_node" {
     }
 
     connection {
+        host = self.public_ip
         user = "${lookup(var.user, var.platform)}"
         private_key = "${file("${var.key_path}")}"
     }
 
-    tags {
+    tags = {
         Name = "${var.tag_name}-ambari-node-${count.index}"
     }
 
-    volume_tags {
+    volume_tags = {
         Name = "${var.tag_name}-ambari-node-${count.index}"
     }
 

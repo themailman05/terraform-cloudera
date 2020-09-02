@@ -13,15 +13,16 @@ resource "aws_instance" "cdh_server" {
     delete_on_termination = true
   }
 
-  tags {
+  tags = {
     Name = "${var.tag_name}-cdh-server"
   }
 
-  volume_tags {
+  volume_tags = {
     Name = "${var.tag_name}-cdh-server"
   }
 
   connection {
+    host        = self.public_ip
     user        = "${lookup(var.user, var.platform)}"
     private_key = "${file("${var.key_path}")}"
   }
@@ -49,7 +50,7 @@ resource "aws_instance" "cdh_server" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/cdh-agent.sh",
-      "/tmp/cdh-agent.sh ${aws_instance.cdh_server.private_ip}",
+      "/tmp/cdh-agent.sh ${aws_instance.cdh_server[0].private_ip}",
     ]
   }
 
@@ -61,7 +62,7 @@ resource "aws_instance" "cdh_server" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/kerberos-server.sh",
-      "/tmp/kerberos-server.sh ${aws_instance.cdh_server.private_ip}",
+      "/tmp/kerberos-server.sh ${aws_instance.cdh_server[0].private_ip}",
     ]
   }
 
@@ -88,11 +89,11 @@ resource "aws_instance" "cdh_node" {
     iops        = "${var.iops}"
   }
 
-  tags {
+  tags = {
     Name = "${var.tag_name}-cdh-node-${count.index}"
   }
 
-  volume_tags {
+  volume_tags = {
     Name = "${var.tag_name}-cdh-node-${count.index}"
   }
 
