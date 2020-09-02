@@ -13,15 +13,16 @@ resource "aws_instance" "client" {
     delete_on_termination = true
   }
 
-  tags {
+  tags = {
     Name = "${var.tag_name}-client"
   }
 
-  volume_tags {
+  volume_tags = {
     Name = "${var.tag_name}-client"
   }
 
   connection {
+    host        = self.public_ip
     user        = "${lookup(var.user, var.platform)}"
     private_key = "${file("${var.key_path}")}"
   }
@@ -41,7 +42,7 @@ resource "aws_instance" "client" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/kerberos-node.sh",
-      "/tmp/kerberos-node.sh ${aws_instance.cdh_server.private_ip}",
+      "/tmp/kerberos-node.sh ${aws_instance.cdh_server[0].private_ip}",
     ]
   }
 }

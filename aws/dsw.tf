@@ -31,15 +31,16 @@ resource "aws_instance" "dsw_master" {
     delete_on_termination = true
   }
 
-  tags {
+  tags = {
     Name = "${var.tag_name}-dsw-master"
   }
 
-  volume_tags {
+  volume_tags = {
     Name = "${var.tag_name}-dsw-master"
   }
 
   connection {
+    host        = self.public_ip
     user        = "${lookup(var.user, var.platform)}"
     private_key = "${file("${var.key_path}")}"
   }
@@ -59,7 +60,7 @@ resource "aws_instance" "dsw_master" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/cdh-agent.sh",
-      "/tmp/cdh-agent.sh ${aws_instance.cdh_server.private_ip}",
+      "/tmp/cdh-agent.sh ${aws_instance.cdh_server[0].private_ip}",
     ]
   }
 
@@ -71,7 +72,7 @@ resource "aws_instance" "dsw_master" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/kerberos-node.sh",
-      "/tmp/kerberos-node.sh ${aws_instance.cdh_server.private_ip}",
+      "/tmp/kerberos-node.sh ${aws_instance.cdh_server[0].private_ip}",
     ]
   }
 
@@ -83,7 +84,7 @@ resource "aws_instance" "dsw_master" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/cdsw.sh",
-      "/tmp/cdsw.sh ${aws_instance.dsw_master.private_ip} ${var.dsw_domain}",
+      "/tmp/cdsw.sh ${aws_instance.dsw_master[0].private_ip} ${var.dsw_domain}",
     ]
   }
 }
@@ -104,7 +105,7 @@ resource "aws_instance" "dsw_node" {
   }
 
   # Docker volume
-  ebs_block_device = {
+  ebs_block_device {
     volume_type           = "io1"
     volume_size           = "500"
     device_name           = "/dev/xvdb"
@@ -112,15 +113,16 @@ resource "aws_instance" "dsw_node" {
     delete_on_termination = true
   }
 
-  tags {
+  tags = {
     Name = "${var.tag_name}-dsw-node-${count.index}"
   }
 
-  volume_tags {
+  volume_tags = {
     Name = "${var.tag_name}-dsw-node-${count.index}"
   }
 
   connection {
+    host        = self.public_ip
     user        = "${lookup(var.user, var.platform)}"
     private_key = "${file("${var.key_path}")}"
   }
@@ -140,7 +142,7 @@ resource "aws_instance" "dsw_node" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/cdh-agent.sh",
-      "/tmp/cdh-agent.sh ${aws_instance.cdh_server.private_ip}",
+      "/tmp/cdh-agent.sh ${aws_instance.cdh_server[0].private_ip}",
     ]
   }
 
@@ -152,7 +154,7 @@ resource "aws_instance" "dsw_node" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/kerberos-node.sh",
-      "/tmp/kerberos-node.sh ${aws_instance.cdh_server.private_ip}",
+      "/tmp/kerberos-node.sh ${aws_instance.cdh_server[0].private_ip}",
     ]
   }
 
@@ -164,17 +166,17 @@ resource "aws_instance" "dsw_node" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/cdsw.sh",
-      "/tmp/cdsw.sh ${aws_instance.dsw_master.private_ip} ${var.dsw_domain}",
+      "/tmp/cdsw.sh ${aws_instance.dsw_master[0].private_ip} ${var.dsw_domain}",
     ]
   }
 }
 
 resource "aws_eip" "lb" {
-  instance = "${aws_instance.dsw_master.id}"
+  instance = "${aws_instance.dsw_master[0].id}"
 
   #   vpc      = true
 
-  tags {
+  tags = {
     Name = "${var.tag_name}-dsw-master"
   }
 }
