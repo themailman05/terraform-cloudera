@@ -5,30 +5,27 @@ resource "aws_instance" "dsw_master" {
   count           = "${var.dsw_master}"
   security_groups = ["${aws_security_group.cloudera.id}"]
   placement_group = "${aws_placement_group.cloudera.id}"
-  subnet_id       = var.subnet_id
+  subnet_id       = var.public_subnet_block[0].id
 
   root_block_device {
-    volume_type           = "io1"
+    volume_type           = "gp2"
     volume_size           = "100"
-    iops                  = 1000
     delete_on_termination = true
   }
 
   # Docker volume
   ebs_block_device {
-    volume_type           = "io1"
+    volume_type           = "gp2"
     volume_size           = "500"
     device_name           = "/dev/xvdb"
-    iops                  = 1000
     delete_on_termination = true
   }
 
   # App volume (Master only)
   ebs_block_device {
     volume_size           = "500"
-    volume_type           = "io1"
+    volume_type           = "gp2"
     device_name           = "/dev/xvdc"
-    iops                  = 1000
     delete_on_termination = true
   }
 
@@ -97,10 +94,10 @@ resource "aws_instance" "dsw_node" {
   count           = "${var.dsw_nodes}"
   security_groups = ["${aws_security_group.cloudera.id}"]
   placement_group = "${aws_placement_group.cloudera.id}"
-  subnet_id       = var.subnet_id 
+  subnet_id       = var.public_subnet_block[count.index].id
   
   root_block_device {
-    volume_type           = "io1"
+    volume_type           = "gp2"
     volume_size           = "100"
     iops                  = 1000
     delete_on_termination = true
@@ -108,7 +105,7 @@ resource "aws_instance" "dsw_node" {
 
   # Docker volume
   ebs_block_device {
-    volume_type           = "io1"
+    volume_type           = "gp2"
     volume_size           = "500"
     device_name           = "/dev/xvdb"
     iops                  = 1000

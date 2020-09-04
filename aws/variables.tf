@@ -57,6 +57,10 @@ variable "ambari_nodes" {
   default     = "0"
 }
 
+variable "ambari_subnet_id" {
+  description = "Ambari subnet for starting and monitoring cluster"
+}
+
 variable "region" {
   description = "The region of AWS, for AMI lookups."
   default     = "us-east-1"
@@ -74,7 +78,10 @@ variable "user" {
   }
 }
 
-variable "subnet_id" {
+variable "private_subnet_block" {
+}
+
+variable "public_subnet_block" {
 }
 
 variable "vpc_id" {

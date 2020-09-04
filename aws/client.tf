@@ -5,7 +5,7 @@ resource "aws_instance" "client" {
   count           = "${var.client}"
   security_groups = ["${aws_security_group.cloudera.id}"]
   placement_group = "${aws_placement_group.cloudera.id}"
-  subnet_id       = var.subnet_id
+  subnet_id       = var.public_subnet_block[0].id
 
   root_block_device {
     volume_type           = "${var.volume_type}"
